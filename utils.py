@@ -1,7 +1,7 @@
 from enum import Enum
 import random
 
-DEBUG = True
+DEBUG = False
 
 # Extend the possible states based on your implementation
 # Refer TCP protocol
