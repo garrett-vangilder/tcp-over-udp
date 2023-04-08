@@ -4,6 +4,8 @@ from utils import States
 
 UDP_IP = "127.0.0.1"
 # UDP_PORT = 5005
+
+# reference to our channel
 UDP_PORT = 5008
 
 # initial server_state
@@ -24,6 +26,9 @@ addr = (
     None,
 )
 
+# this is used to keep track of the last received sequence number to prevent the server
+# from incrementing the sequence number when it receives a duplicate message
+# or a message is dropped/out of order
 last_received_seq_num = 0
 
 
@@ -124,6 +129,7 @@ while True:
             if header.ack == 1:
                 # update the state client is now established
                 update_server_state()
+
                 last_received_seq_num = header.seq_num
                 continue
 
@@ -158,12 +164,12 @@ while True:
                 resp_header = utils.Header(next_seq_num, ack_number, syn=0, ack=1)
                 next_seq_num += 1
 
-                # update the state and send message
+                # update the state and send message from ESTABLISHED to CLOSE_WAIT
                 update_server_state()
-            sock.sendto(resp_header.bits(), addr)
+            if resp_header:
+                sock.sendto(resp_header.bits(), addr)
 
         case States.CLOSE_WAIT:
-            # TODO: Update seq and ack number to account for data transmission
             ack_number = header.seq_num + 1
             resp_header = utils.Header(next_seq_num, ack_number, syn=0, ack=0, fin=1)
 
@@ -193,6 +199,10 @@ while True:
     }:
         update_server_state()
 
+    # send the response header if it exists and the server is not established
+    # established state is handled above and is unique enough to break our pattern
+    # so we handle it separately. Additionally we must increment the next_seq_num, ESTABLISHED
+    # also increments the next_seq_num
     if resp_header and server_state is not States.ESTABLISHED:
         sock.sendto(resp_header.bits(), addr)
         next_seq_num += 1

@@ -6,12 +6,15 @@ import utils
 
 UDP_IP = "127.0.0.1"
 # UDP_PORT = 5005
+
+# reference to our channel
 UDP_PORT = 5007
+
 MSS = 12  # maximum segment size
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # Internet  # UDP
 
-# create a timeout
+# set a timeout for our socket, this is necessary so that we can catch packets that are dropped
 sock.settimeout(0.5)
 
 
@@ -56,7 +59,8 @@ class Client:
         while True:
             # if we've sent a syn message, we need to wait for a syn_ack message
             if self.client_state == States.SYN_SENT:
-                # wait for response from server
+                # wait for response from server, set an infinite loop until we get a response
+                # if timeout occurs, we will continue to wait
                 while True:
                     try:
                         recv_header = self.receive_ack()
@@ -128,7 +132,9 @@ class Client:
 
             # if we've sent a fin message, we need to wait for a fin_ack message
             if self.client_state in {States.FIN_WAIT_1, States.FIN_WAIT_2}:
-                # wait for response from server
+                
+                # wait for response from server, set an infinite loop until we get a response
+                # if timeout occurs, we will continue to wait until the message is received
                 while True:
                     try:
                         self.receive_ack()
