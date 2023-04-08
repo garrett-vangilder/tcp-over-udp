@@ -5,10 +5,14 @@ import socket
 import utils
 
 UDP_IP = "127.0.0.1"
-UDP_PORT = 5005
+# UDP_PORT = 5005
+UDP_PORT = 5007
 MSS = 12  # maximum segment size
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # Internet  # UDP
+
+# create a timeout
+sock.settimeout(0.5)
 
 
 def send_udp(message):
@@ -50,17 +54,21 @@ class Client:
         synack_header = None
         # several state changes necessary in this process, open a while loop
         while True:
-
             # if we've sent a syn message, we need to wait for a syn_ack message
             if self.client_state == States.SYN_SENT:
                 # wait for response from server
-                recv_header = self.receive_ack()
+                while True:
+                    try:
+                        recv_header = self.receive_ack()
+                    except socket.timeout:
+                        continue
+                    break
 
             match self.client_state:
                 case States.CLOSED:
                     # Create a random sequence number
                     seq_num = utils.rand_int()
-                    
+
                     # will increment when message is sent
                     self.next_seq_num = seq_num
 
@@ -69,11 +77,13 @@ class Client:
 
                     if utils.DEBUG:
                         print("[DEBUG] Sending SYN")
-                        print(f"[DEBUG] SEQ: {syn_header.seq_num} | ACK: {syn_header.ack_num}")
+                        print(
+                            f"[DEBUG] SEQ: {syn_header.seq_num} | ACK: {syn_header.ack_num}"
+                        )
 
                     # send the message
                     send_udp(syn_header.bits())
-                    
+
                     # increment sequence number
                     self.next_seq_num += 1
 
@@ -85,15 +95,17 @@ class Client:
                             self.next_seq_num, ack_number, syn=0, ack=1
                         )
 
-                    if utils.DEBUG:
-                        print("[DEBUG] Sending SYNACK")
-                        print(f"[DEBUG] SEQ: {synack_header.seq_num} | ACK: {synack_header.ack_num}")
+                        if utils.DEBUG:
+                            print("[DEBUG] Sending ACK")
+                            print(
+                                f"[DEBUG] SEQ: {synack_header.seq_num} | ACK: {synack_header.ack_num}"
+                            )
 
-                    # send the message
-                    send_udp(synack_header.bits())                        
+                        # send the message
+                        send_udp(synack_header.bits())
 
-                    # increment sequence number
-                    self.next_seq_num += 1
+                        # increment sequence number
+                        self.next_seq_num += 1
 
                 case _:
                     return
@@ -117,12 +129,19 @@ class Client:
             # if we've sent a fin message, we need to wait for a fin_ack message
             if self.client_state in {States.FIN_WAIT_1, States.FIN_WAIT_2}:
                 # wait for response from server
-                self.receive_ack()
+                while True:
+                    try:
+                        self.receive_ack()
+                    except socket.timeout:
+                        continue
+                    break
 
             match self.client_state:
                 case States.ESTABLISHED:
                     # Create a header
-                    header = utils.Header(self.next_seq_num, ack_num, syn=1, ack=0, fin=1)
+                    header = utils.Header(
+                        self.next_seq_num, ack_num, syn=1, ack=0, fin=1
+                    )
 
                     if utils.DEBUG:
                         print("[DEBUG] Sending FIN")
@@ -141,7 +160,7 @@ class Client:
 
                     if utils.DEBUG:
                         print("[DEBUG] Sending FINACK")
-                        print(f"[DEBUG] SEQ: {header.seq_num} | ACK: {header.ack_num}")                    
+                        print(f"[DEBUG] SEQ: {header.seq_num} | ACK: {header.ack_num}")
 
                 case States.TIME_WAIT:
                     # wait 30 seconds and then close
@@ -184,21 +203,52 @@ class Client:
         self.client_state = new_state
 
     def send_reliable_message(self, message):
+        """
+        Send a reliable message to the server. Via stop-and-wait
+        :param message: The message to send.
+        :return: None
+        """
         if self.client_state is States.ESTABLISHED:
-            # create a new message
-            header = utils.Header(
-                self.next_seq_num, self.last_received_seq + 1, syn=0, ack=0
-            )
+            # chunk message into MSS sized chunks
+            chunks = [message[i : i + MSS] for i in range(0, len(message), MSS)]
+            # create a new message for each chunk
+            for chunk in chunks:
+                while True:
+                    # get size of chunk in bytes
+                    chunk_size = len(chunk.encode())
 
-            if utils.DEBUG:
-                print("[DEBUG] Sending message:", message)
-                print(f"[DEBUG] SEQ: {header.seq_num} | ACK: {header.ack_num}")
+                    # next_seq_num is the sequence number of the next message
+                    # needs to account for chunk size
+                    seq_num = self.next_seq_num + chunk_size
 
-            # send the message
-            send_udp(header.bits() + message.encode())
+                    if utils.DEBUG:
+                        print(f"[DEBUG] Chunk size: {chunk_size}")
+                        print(f"[DEBUG] Next SEQ: {self.next_seq_num}")
+                        print(f"[DEBUG] SEQ: {seq_num}")
 
-            # update the next sequence number
-            self.next_seq_num += 1
+                    header = utils.Header(
+                        seq_num, self.last_received_seq + 1, syn=0, ack=0
+                    )
+
+                    if utils.DEBUG:
+                        print("[DEBUG] Sending message:", chunk)
+                        print(f"[DEBUG] SEQ: {header.seq_num} | ACK: {header.ack_num}")
+
+                    # send the message
+                    send_udp(header.bits() + chunk.encode())
+
+                    try:
+                        # wait for ack
+                        header = self.receive_ack()
+                    except socket.timeout:
+                        # we should retry sending the message
+                        continue
+
+                    # is the ack valid?
+                    if header.ack_num > self.next_seq_num:
+                        # update the next sequence number and break from the loop
+                        self.next_seq_num += chunk_size
+                        break
 
     def receive_ack(self):
         """

@@ -71,7 +71,7 @@ sock_server.settimeout(6.0)
 
 # small sleep: to reduce latency (can speed testing), set as small as possible (~0.05)
 # to test higher latency channels, try ~0.25
-sleep_v = 0.05
+sleep_v = 0.25
 
 # max delay as multiple of sleep_v; do not set too high, otherwise can cause timeouts
 # if you see client/server timeouts, may need to adjust timeouts in your client/server
@@ -89,8 +89,8 @@ event_terminate = threading.Event()
 # for initial testing, suggest using a small value (0.01, so ~1% messages dropped)
 # for final testing, suggest using a large value (0.5, so ~50% messages dropped)
 # untested, but 0.0 should be an ideal channel (no drops) but with delays
-p_drop_server = 0.0 # (roughly) probability to drop an ack from server
-p_drop_client = 0.0 # (roughly) probability to drop a message from client
+p_drop_server = 0.5 # (roughly) probability to drop an ack from server
+p_drop_client = 0.5 # (roughly) probability to drop a message from client
 
 round = 0 # used for some startup synchronization
 event_wait_send = threading.Event() # used for some recurring synchronization ordering sends/recvs

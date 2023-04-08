@@ -3,7 +3,8 @@ import utils
 from utils import States
 
 UDP_IP = "127.0.0.1"
-UDP_PORT = 5005
+# UDP_PORT = 5005
+UDP_PORT = 5008
 
 # initial server_state
 server_state = States.CLOSED
@@ -22,6 +23,8 @@ addr = (
     None,
     None,
 )
+
+last_received_seq_num = 0
 
 
 # Some helper functions to keep the code clean and tidy
@@ -72,6 +75,7 @@ def recv_msg():
     body = utils.get_body_from_data(data)
     return (header, body, addr)
 
+
 next_seq_num = 0
 # The server is always listening for messages
 while True:
@@ -106,42 +110,61 @@ while True:
 
         case States.SYN_RECEIVED:
             # Create a header, seq number is defined above
-            resp_header = utils.Header(next_seq_num, ack_number, syn=1, ack=1)
+            if header.syn == 1:
+                resp_header = utils.Header(next_seq_num, ack_number, syn=1, ack=1)
 
             if utils.DEBUG:
                 print("[DEBUG] Received SYN")
                 print("[DEBUG] Sending SYNACK")
-                print(f"[DEBUG] SEQ: {resp_header.seq_num} | ACK: {resp_header.ack_num}")                    
+                print(
+                    f"[DEBUG] SEQ: {resp_header.seq_num} | ACK: {resp_header.ack_num}"
+                )
 
         case States.SYN_SENT:
             if header.ack == 1:
                 # update the state client is now established
                 update_server_state()
+                last_received_seq_num = header.seq_num
                 continue
 
         case States.ESTABLISHED:
             if not header.fin:
-                # append body to the message
-                message += body
-
                 if utils.DEBUG:
                     print("[DEBUG] Server received message:", body)
-                
+
                 ack_number = header.seq_num + 1
                 resp_header = utils.Header(next_seq_num, ack_number, syn=1, ack=1)
+
+                if utils.DEBUG:
+                    print(
+                        "[DEBUG] Previously received sequence number:",
+                        last_received_seq_num,
+                    )
+                    print(
+                        "[DEBUG]     Current message sequence number:", header.seq_num
+                    )
+
+                # if the seq num is greater than the last received seq num
+                # then we can add the body to the message
+                # and update the last received seq num
+                # otherwise our message was not received
+                if header.seq_num > last_received_seq_num:
+                    next_seq_num += 1
+                    message += body
+                    last_received_seq_num = header.seq_num
 
             else:
                 ack_number = header.seq_num + 1
                 resp_header = utils.Header(next_seq_num, ack_number, syn=0, ack=1)
+                next_seq_num += 1
 
                 # update the state and send message
                 update_server_state()
             sock.sendto(resp_header.bits(), addr)
-            next_seq_num += 1
 
         case States.CLOSE_WAIT:
             # TODO: Update seq and ack number to account for data transmission
-            ack_number = header.seq_num + 1            
+            ack_number = header.seq_num + 1
             resp_header = utils.Header(next_seq_num, ack_number, syn=0, ack=0, fin=1)
 
         case States.LAST_ACK:

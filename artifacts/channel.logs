@@ -1,0 +1,173 @@
+ garrett@GARRETTs-MBP  ~/workspace/CS5283/homework_four   main ● ⍟1  python ./channel.py
+waiting on client
+waiting on server response (can hang if server does not resend)
+channel delaying client->server for  0.5024531534455446 s
+channel forwarding to server
+waiting on client
+channel forwarding to client
+channel delaying server->client for  0.7873733804227605 s
+waiting on server response (can hang if server does not resend)
+round:  1 ongoing, waiting 5s (threads sampled faster)
+
+channel delaying client->server for  0.4781240638212435 s
+channel forwarding to server
+waiting on client
+channel delaying client->server for  0.2734048038880549 s
+channel forwarding to server
+channel forwarding to client
+waiting on client
+channel delaying server->client for  0.618878628054453 s
+waiting on server response (can hang if server does not resend)
+channel delaying client->server for  0.942481508490782 s
+channel forwarding to server
+channel forwarding to client
+waiting on client
+channel delaying client->server for  0.39284928940054614 s
+channel forwarding to server
+channel delaying server->client for  0.7857053843767969 s
+waiting on client
+waiting on server response (can hang if server does not resend)
+channel forwarding to client
+channel delaying server->client for  0.3127009499792728 s
+waiting on server response (can hang if server does not resend)
+channel delaying client->server for  0.8893869728888848 s
+DROPPING MESSAGE FROM CLIENT
+waiting on client
+channel delaying client->server for  0.8278624945127813 s
+channel forwarding to server
+waiting on client
+channel forwarding to client
+channel delaying client->server for  0.26847166737832234 s
+DROPPING MESSAGE FROM CLIENT
+waiting on client
+round:  4 ongoing, waiting 5s (threads sampled faster)
+
+channel delaying server->client for  0.3758521366176326 s
+waiting on server response (can hang if server does not resend)
+channel delaying client->server for  0.4502205466150597 s
+DROPPING MESSAGE FROM CLIENT
+waiting on client
+channel delaying client->server for  0.6619722683202705 s
+channel forwarding to server
+waiting on client
+channel forwarding to client
+channel delaying server->client for  0.5507407233667507 s
+channel delaying client->server for  0.672154130640532 s
+DROPPING MESSAGE FROM CLIENT
+waiting on client
+waiting on server response (can hang if server does not resend)
+channel delaying client->server for  0.5342981978092239 s
+DROPPING MESSAGE FROM CLIENT
+waiting on client
+channel delaying client->server for  0.5251072924520166 s
+DROPPING MESSAGE FROM CLIENT
+waiting on client
+channel delaying client->server for  0.4817182151565148 s
+channel forwarding to server
+waiting on client
+channel forwarding to client
+channel delaying server->client for  0.39838485651667455 s
+channel delaying client->server for  0.5418929720941221 s
+channel forwarding to server
+waiting on server response (can hang if server does not resend)
+waiting on client
+channel forwarding to client
+round:  7 ongoing, waiting 5s (threads sampled faster)
+
+channel delaying server->client for  0.3735162909285178 s
+waiting on server response (can hang if server does not resend)
+channel delaying client->server for  0.797706107212624 s
+channel forwarding to server
+waiting on client
+channel forwarding to client
+channel delaying client->server for  0.4535997070053466 s
+channel forwarding to server
+waiting on client
+channel delaying server->client for  0.7365227601648988 s
+waiting on server response (can hang if server does not resend)
+channel forwarding to client
+channel delaying client->server for  0.39583196922020625 s
+channel forwarding to server
+waiting on client
+channel delaying server->client for  0.9164179160886191 s
+channel delaying client->server for  0.656993100162249 s
+channel forwarding to server
+waiting on server response (can hang if server does not resend)
+channel forwarding to client
+waiting on client
+channel delaying server->client for  0.4344466327386624 s
+waiting on server response (can hang if server does not resend)
+channel forwarding to client
+channel delaying client->server for  0.8897390741912745 s
+channel forwarding to server
+channel delaying server->client for  0.5170727237022015 s
+waiting on client
+waiting on server response (can hang if server does not resend)
+channel forwarding to client
+channel delaying server->client for  0.40892014183339154 s
+channel delaying client->server for  0.8198670942090569 s
+channel forwarding to server
+waiting on server response (can hang if server does not resend)
+round:  13 ongoing, waiting 5s (threads sampled faster)
+
+waiting on client
+channel forwarding to client
+channel delaying server->client for  0.8279156639045171 s
+waiting on server response (can hang if server does not resend)
+round:  14 ongoing, waiting 5s (threads sampled faster)
+
+EXCEPTION: client channel timeout, message lost
+waiting on client
+round:  14 ongoing, waiting 5s (threads sampled faster)
+
+EXCEPTION: client channel timeout, message lost
+waiting on client
+round:  14 ongoing, waiting 5s (threads sampled faster)
+
+EXCEPTION: client channel timeout, message lost
+waiting on client
+round:  14 ongoing, waiting 5s (threads sampled faster)
+
+EXCEPTION: client channel timeout, message lost
+waiting on client
+round:  14 ongoing, waiting 5s (threads sampled faster)
+
+round:  14 ongoing, waiting 5s (threads sampled faster)
+
+EXCEPTION: client channel timeout, message lost
+waiting on client
+round:  14 ongoing, waiting 5s (threads sampled faster)
+
+EXCEPTION: client channel timeout, message lost
+waiting on client
+round:  14 ongoing, waiting 5s (threads sampled faster)
+
+EXCEPTION: client channel timeout, message lost
+waiting on client
+round:  14 ongoing, waiting 5s (threads sampled faster)
+
+EXCEPTION: client channel timeout, message lost
+waiting on client
+round:  14 ongoing, waiting 5s (threads sampled faster)
+
+EXCEPTION: client channel timeout, message lost
+waiting on client
+round:  14 ongoing, waiting 5s (threads sampled faster)
+
+round:  14 ongoing, waiting 5s (threads sampled faster)
+
+EXCEPTION: client channel timeout, message lost
+waiting on client
+round:  14 ongoing, waiting 5s (threads sampled faster)
+
+EXCEPTION: client channel timeout, message lost
+waiting on client
+round:  14 ongoing, waiting 5s (threads sampled faster)
+
+EXCEPTION: client channel timeout, message lost
+waiting on client
+round:  14 ongoing, waiting 5s (threads sampled faster)
+
+EXCEPTION: client channel timeout, message lost
+waiting on client
+round:  14 ongoing, waiting 5s (threads sampled faster)

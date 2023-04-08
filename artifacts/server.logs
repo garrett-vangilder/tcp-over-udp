@@ -1,0 +1,187 @@
+ garrett@GARRETTs-MBP  ~/workspace/CS5283/homework_four   main ● ? ⍟1  python ./server.py
+[STATE CHANGE] States.CLOSED -> States.LISTEN
+[DEBUG] Server waiting for message
+[STATE CHANGE] States.LISTEN -> States.SYN_RECEIVED
+[DEBUG] Received SYN
+[DEBUG] Sending SYNACK
+[DEBUG] SEQ: 3 | ACK: 7
+[STATE CHANGE] States.SYN_RECEIVED -> States.SYN_SENT
+00000000000000000000000000000011 : seq_num = 3
+00000000000000000000000000000111 : ack_num = 7
+11000000000000000000000000000000 : syn = 1, ack = 1, fin = 0
+[DEBUG] Server waiting for message
+[STATE CHANGE] States.SYN_SENT -> States.ESTABLISHED
+[DEBUG] Server waiting for message
+[DEBUG] Server received message: This message
+[DEBUG] Previously received sequence number: 7
+[DEBUG]     Current message sequence number: 20
+00000000000000000000000000000100 : seq_num = 4
+00000000000000000000000000010101 : ack_num = 21
+11000000000000000000000000000000 : syn = 1, ack = 1, fin = 0
+[DEBUG] Server waiting for message
+[DEBUG] Server received message: This message
+[DEBUG] Previously received sequence number: 20
+[DEBUG]     Current message sequence number: 20
+00000000000000000000000000000101 : seq_num = 5
+00000000000000000000000000010101 : ack_num = 21
+11000000000000000000000000000000 : syn = 1, ack = 1, fin = 0
+[DEBUG] Server waiting for message
+[DEBUG] Server received message: This message
+[DEBUG] Previously received sequence number: 20
+[DEBUG]     Current message sequence number: 20
+00000000000000000000000000000101 : seq_num = 5
+00000000000000000000000000010101 : ack_num = 21
+11000000000000000000000000000000 : syn = 1, ack = 1, fin = 0
+[DEBUG] Server waiting for message
+[DEBUG] Server received message: This message
+[DEBUG] Previously received sequence number: 20
+[DEBUG]     Current message sequence number: 20
+00000000000000000000000000000101 : seq_num = 5
+00000000000000000000000000010101 : ack_num = 21
+11000000000000000000000000000000 : syn = 1, ack = 1, fin = 0
+[DEBUG] Server waiting for message
+[DEBUG] Server received message: This message
+[DEBUG] Previously received sequence number: 20
+[DEBUG]     Current message sequence number: 20
+00000000000000000000000000000101 : seq_num = 5
+00000000000000000000000000010101 : ack_num = 21
+11000000000000000000000000000000 : syn = 1, ack = 1, fin = 0
+[DEBUG] Server waiting for message
+[DEBUG] Server received message:  is to be re
+[DEBUG] Previously received sequence number: 20
+[DEBUG]     Current message sequence number: 32
+00000000000000000000000000000101 : seq_num = 5
+00000000000000000000000000100001 : ack_num = 33
+11000000000000000000000000000000 : syn = 1, ack = 1, fin = 0
+[DEBUG] Server waiting for message
+[DEBUG] Server received message:  is to be re
+[DEBUG] Previously received sequence number: 32
+[DEBUG]     Current message sequence number: 32
+00000000000000000000000000000110 : seq_num = 6
+00000000000000000000000000100001 : ack_num = 33
+11000000000000000000000000000000 : syn = 1, ack = 1, fin = 0
+[DEBUG] Server waiting for message
+[DEBUG] Server received message: ceived in pi
+[DEBUG] Previously received sequence number: 32
+[DEBUG]     Current message sequence number: 44
+00000000000000000000000000000110 : seq_num = 6
+00000000000000000000000000101101 : ack_num = 45
+11000000000000000000000000000000 : syn = 1, ack = 1, fin = 0
+[DEBUG] Server waiting for message
+[DEBUG] Server received message: ceived in pi
+[DEBUG] Previously received sequence number: 44
+[DEBUG]     Current message sequence number: 44
+00000000000000000000000000000111 : seq_num = 7
+00000000000000000000000000101101 : ack_num = 45
+11000000000000000000000000000000 : syn = 1, ack = 1, fin = 0
+[DEBUG] Server waiting for message
+[DEBUG] Server received message: ceived in pi
+[DEBUG] Previously received sequence number: 44
+[DEBUG]     Current message sequence number: 44
+00000000000000000000000000000111 : seq_num = 7
+00000000000000000000000000101101 : ack_num = 45
+11000000000000000000000000000000 : syn = 1, ack = 1, fin = 0
+[DEBUG] Server waiting for message
+[DEBUG] Server received message: ceived in pi
+[DEBUG] Previously received sequence number: 44
+[DEBUG]     Current message sequence number: 44
+00000000000000000000000000000111 : seq_num = 7
+00000000000000000000000000101101 : ack_num = 45
+11000000000000000000000000000000 : syn = 1, ack = 1, fin = 0
+[DEBUG] Server waiting for message
+[DEBUG] Server received message: ceived in pi
+[DEBUG] Previously received sequence number: 44
+[DEBUG]     Current message sequence number: 44
+00000000000000000000000000000111 : seq_num = 7
+00000000000000000000000000101101 : ack_num = 45
+11000000000000000000000000000000 : syn = 1, ack = 1, fin = 0
+[DEBUG] Server waiting for message
+[DEBUG] Server received message: ceived in pi
+[DEBUG] Previously received sequence number: 44
+[DEBUG]     Current message sequence number: 44
+00000000000000000000000000000111 : seq_num = 7
+00000000000000000000000000101101 : ack_num = 45
+11000000000000000000000000000000 : syn = 1, ack = 1, fin = 0
+[DEBUG] Server waiting for message
+[DEBUG] Server received message: ceived in pi
+[DEBUG] Previously received sequence number: 44
+[DEBUG]     Current message sequence number: 44
+00000000000000000000000000000111 : seq_num = 7
+00000000000000000000000000101101 : ack_num = 45
+11000000000000000000000000000000 : syn = 1, ack = 1, fin = 0
+[DEBUG] Server waiting for message
+[DEBUG] Server received message: ceived in pi
+[DEBUG] Previously received sequence number: 44
+[DEBUG]     Current message sequence number: 44
+00000000000000000000000000000111 : seq_num = 7
+00000000000000000000000000101101 : ack_num = 45
+11000000000000000000000000000000 : syn = 1, ack = 1, fin = 0
+[DEBUG] Server waiting for message
+[DEBUG] Server received message: ceived in pi
+[DEBUG] Previously received sequence number: 44
+[DEBUG]     Current message sequence number: 44
+00000000000000000000000000000111 : seq_num = 7
+00000000000000000000000000101101 : ack_num = 45
+11000000000000000000000000000000 : syn = 1, ack = 1, fin = 0
+[DEBUG] Server waiting for message
+[DEBUG] Server received message: ceived in pi
+[DEBUG] Previously received sequence number: 44
+[DEBUG]     Current message sequence number: 44
+00000000000000000000000000000111 : seq_num = 7
+00000000000000000000000000101101 : ack_num = 45
+11000000000000000000000000000000 : syn = 1, ack = 1, fin = 0
+[DEBUG] Server waiting for message
+[DEBUG] Server received message: eces
+[DEBUG] Previously received sequence number: 44
+[DEBUG]     Current message sequence number: 48
+00000000000000000000000000000111 : seq_num = 7
+00000000000000000000000000110001 : ack_num = 49
+11000000000000000000000000000000 : syn = 1, ack = 1, fin = 0
+[DEBUG] Server waiting for message
+[DEBUG] Server received message: eces
+[DEBUG] Previously received sequence number: 48
+[DEBUG]     Current message sequence number: 48
+00000000000000000000000000001000 : seq_num = 8
+00000000000000000000000000110001 : ack_num = 49
+11000000000000000000000000000000 : syn = 1, ack = 1, fin = 0
+[DEBUG] Server waiting for message
+[DEBUG] Server received message: eces
+[DEBUG] Previously received sequence number: 48
+[DEBUG]     Current message sequence number: 48
+00000000000000000000000000001000 : seq_num = 8
+00000000000000000000000000110001 : ack_num = 49
+11000000000000000000000000000000 : syn = 1, ack = 1, fin = 0
+[DEBUG] Server waiting for message
+[DEBUG] Server received message: eces
+[DEBUG] Previously received sequence number: 48
+[DEBUG]     Current message sequence number: 48
+00000000000000000000000000001000 : seq_num = 8
+00000000000000000000000000110001 : ack_num = 49
+11000000000000000000000000000000 : syn = 1, ack = 1, fin = 0
+[DEBUG] Server waiting for message
+[DEBUG] Server received message: eces
+[DEBUG] Previously received sequence number: 48
+[DEBUG]     Current message sequence number: 48
+00000000000000000000000000001000 : seq_num = 8
+00000000000000000000000000110001 : ack_num = 49
+11000000000000000000000000000000 : syn = 1, ack = 1, fin = 0
+[DEBUG] Server waiting for message
+[DEBUG] Server received message: eces
+[DEBUG] Previously received sequence number: 48
+[DEBUG]     Current message sequence number: 48
+00000000000000000000000000001000 : seq_num = 8
+00000000000000000000000000110001 : ack_num = 49
+11000000000000000000000000000000 : syn = 1, ack = 1, fin = 0
+[DEBUG] Server waiting for message
+[STATE CHANGE] States.ESTABLISHED -> States.CLOSE_WAIT
+00000000000000000000000000001000 : seq_num = 8
+00000000000000000000000000110001 : ack_num = 49
+01000000000000000000000000000000 : syn = 0, ack = 1, fin = 0
+[STATE CHANGE] States.CLOSE_WAIT -> States.LAST_ACK
+00000000000000000000000000001000 : seq_num = 8
+00000000000000000000000000110001 : ack_num = 49
+01000000000000000000000000000000 : syn = 0, ack = 1, fin = 0
+[DEBUG] Server waiting for message
+[STATE CHANGE] States.LAST_ACK -> States.CLOSED
+[STATE CHANGE] States.CLOSED -> States.LISTEN
+[DEBUG] Server waiting for message
