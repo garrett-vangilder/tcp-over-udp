@@ -25,8 +25,13 @@ class Client:
     The client class is responsible for establishing a connection
     with the server and sending a message.
     """
+
+    # Note: These values are set to -1 to indicate that they have not been set
+    # and there has not been a message sent/received yet.
     last_received_ack = -1
     last_received_seq = -1
+
+    next_seq_num = 0
 
     def __init__(self):
         """
@@ -40,44 +45,58 @@ class Client:
         Perform the handshake process.
         :return: None
         """
-
+        recv_header = None
+        syn_header = None
+        synack_header = None
         # several state changes necessary in this process, open a while loop
         while True:
-            # initialize the message, in the case of a handshake its just a header
-            header = None
 
             # if we've sent a syn message, we need to wait for a syn_ack message
             if self.client_state == States.SYN_SENT:
                 # wait for response from server
-                self.receive_ack()
+                recv_header = self.receive_ack()
 
             match self.client_state:
                 case States.CLOSED:
                     # Create a random sequence number
                     seq_num = utils.rand_int()
+                    
+                    # will increment when message is sent
+                    self.next_seq_num = seq_num
 
                     # Create a header
-                    header = utils.Header(seq_num, 0, syn=1, ack=0)
+                    syn_header = utils.Header(seq_num, 0, syn=1, ack=0)
 
-                    # Initialize last received ack and seq num
-                    self.last_received_ack = -1
-                    self.last_received_seq = -1
+                    if utils.DEBUG:
+                        print("[DEBUG] Sending SYN")
+                        print(f"[DEBUG] SEQ: {syn_header.seq_num} | ACK: {syn_header.ack_num}")
+
+                    # send the message
+                    send_udp(syn_header.bits())
+                    
+                    # increment sequence number
+                    self.next_seq_num += 1
 
                 case States.SYN_SENT:
-                    # if we receive a syn message we need to enter ESTABLISHED state
-                    if self.last_received_ack == seq_num + 1:
-                        # set the ack number to the received seq_num + 1
-                        self.last_received_seq += 1
-
-                        header = utils.Header(
-                            self.last_received_ack, self.last_received_seq, syn=0, ack=1
+                    # validate incoming message is correct
+                    if recv_header.syn == 1 and recv_header.ack == 1:
+                        ack_number = self.last_received_seq + 1
+                        synack_header = utils.Header(
+                            self.next_seq_num, ack_number, syn=0, ack=1
                         )
+
+                    if utils.DEBUG:
+                        print("[DEBUG] Sending SYNACK")
+                        print(f"[DEBUG] SEQ: {synack_header.seq_num} | ACK: {synack_header.ack_num}")
+
+                    # send the message
+                    send_udp(synack_header.bits())                        
+
+                    # increment sequence number
+                    self.next_seq_num += 1
 
                 case _:
                     return
-
-            # send the message
-            send_udp(header.bits())
 
             # update the state
             self.update_state()
@@ -88,7 +107,7 @@ class Client:
         :return: None
         """
         # sequence number should be last received ack
-        seq_num = self.last_received_ack + 1
+        seq_num = self.next_seq_num
         ack_num = self.last_received_seq
 
         while True:
@@ -99,12 +118,15 @@ class Client:
             if self.client_state in {States.FIN_WAIT_1, States.FIN_WAIT_2}:
                 # wait for response from server
                 self.receive_ack()
-         
 
             match self.client_state:
                 case States.ESTABLISHED:
                     # Create a header
-                    header = utils.Header(seq_num, ack_num, syn=1, ack=0, fin=1)
+                    header = utils.Header(self.next_seq_num, ack_num, syn=1, ack=0, fin=1)
+
+                    if utils.DEBUG:
+                        print("[DEBUG] Sending FIN")
+                        print(f"[DEBUG] SEQ: {header.seq_num} | ACK: {header.ack_num}")
 
                 case States.FIN_WAIT_1:
                     # increments the last received ack but do not send a response
@@ -114,8 +136,12 @@ class Client:
                 case States.FIN_WAIT_2:
                     # send the final ack
                     header = utils.Header(
-                        self.last_received_ack, self.last_received_seq, syn=0, ack=1
+                        self.next_seq_num, self.last_received_seq, syn=0, ack=1
                     )
+
+                    if utils.DEBUG:
+                        print("[DEBUG] Sending FINACK")
+                        print(f"[DEBUG] SEQ: {header.seq_num} | ACK: {header.ack_num}")                    
 
                 case States.TIME_WAIT:
                     # wait 30 seconds and then close
@@ -127,6 +153,7 @@ class Client:
             if header:
                 # send the message
                 send_udp(header.bits())
+                self.next_seq_num += 1
 
             self.update_state()
 
@@ -157,17 +184,21 @@ class Client:
         self.client_state = new_state
 
     def send_reliable_message(self, message):
-        if utils.DEBUG:
-            print("[DEBUG] Sending message:", message)
         if self.client_state is States.ESTABLISHED:
             # create a new message
             header = utils.Header(
-                self.last_received_ack, self.last_received_seq, syn=0, ack=1
+                self.next_seq_num, self.last_received_seq + 1, syn=0, ack=0
             )
+
+            if utils.DEBUG:
+                print("[DEBUG] Sending message:", message)
+                print(f"[DEBUG] SEQ: {header.seq_num} | ACK: {header.ack_num}")
 
             # send the message
             send_udp(header.bits() + message.encode())
 
+            # update the next sequence number
+            self.next_seq_num += 1
 
     def receive_ack(self):
         """
@@ -186,13 +217,15 @@ class Client:
 
         if header.ack_num > last_received_ack:
             last_received_ack = header.ack_num
-            
+
         if header.seq_num > last_received_seq:
-            last_received_seq = header.seq_num            
+            last_received_seq = header.seq_num
 
         # update the last received ack
         self.last_received_ack = last_received_ack
         self.last_received_seq = last_received_seq
+
+        return header
 
 
 # necessary for freeze_support

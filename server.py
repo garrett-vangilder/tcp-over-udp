@@ -72,7 +72,7 @@ def recv_msg():
     body = utils.get_body_from_data(data)
     return (header, body, addr)
 
-
+next_seq_num = 0
 # The server is always listening for messages
 while True:
     # we need to wait for a client message in these states
@@ -98,12 +98,20 @@ while True:
                 # create a random sequence number
                 seq_number = utils.rand_int()
 
+                # will increment when header is sent
+                next_seq_num = seq_number
+
                 # increment the ack number
                 ack_number = header.seq_num + 1
 
         case States.SYN_RECEIVED:
             # Create a header, seq number is defined above
-            resp_header = utils.Header(seq_number, ack_number, syn=1, ack=1)
+            resp_header = utils.Header(next_seq_num, ack_number, syn=1, ack=1)
+
+            if utils.DEBUG:
+                print("[DEBUG] Received SYN")
+                print("[DEBUG] Sending SYNACK")
+                print(f"[DEBUG] SEQ: {resp_header.seq_num} | ACK: {resp_header.ack_num}")                    
 
         case States.SYN_SENT:
             if header.ack == 1:
@@ -118,22 +126,23 @@ while True:
 
                 if utils.DEBUG:
                     print("[DEBUG] Server received message:", body)
+                
+                ack_number = header.seq_num + 1
+                resp_header = utils.Header(next_seq_num, ack_number, syn=1, ack=1)
 
             else:
-                # TODO: Update seq and ack number to account for data transmission
-                seq_number += 1
-                resp_header = utils.Header(seq_number, header.seq_num, syn=0, ack=1)
+                ack_number = header.seq_num + 1
+                resp_header = utils.Header(next_seq_num, ack_number, syn=0, ack=1)
 
                 # update the state and send message
                 update_server_state()
-                sock.sendto(resp_header.bits(), addr)
-                continue
+            sock.sendto(resp_header.bits(), addr)
+            next_seq_num += 1
 
         case States.CLOSE_WAIT:
-            seq_number += 1
-
             # TODO: Update seq and ack number to account for data transmission
-            resp_header = utils.Header(seq_number, header.seq_num, syn=0, ack=0, fin=1)
+            ack_number = header.seq_num + 1            
+            resp_header = utils.Header(next_seq_num, ack_number, syn=0, ack=0, fin=1)
 
         case States.LAST_ACK:
             # Check if the client replied with an ack
@@ -161,5 +170,6 @@ while True:
     }:
         update_server_state()
 
-    if resp_header:
+    if resp_header and server_state is not States.ESTABLISHED:
         sock.sendto(resp_header.bits(), addr)
+        next_seq_num += 1
