@@ -60,7 +60,7 @@ class Client:
             # if we've sent a syn message, we need to wait for a syn_ack message
             if self.client_state == States.SYN_SENT:
                 # wait for response from server, set an infinite loop until we get a response
-                # if timeout occurs, we will continue to wait
+                # if timeout occurs, we will continue to wait, this is where the stop and wait occurs
                 while True:
                     try:
                         recv_header = self.receive_ack()
